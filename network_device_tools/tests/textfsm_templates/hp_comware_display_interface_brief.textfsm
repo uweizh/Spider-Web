@@ -2,8 +2,8 @@ Value INTERFACE (\S+)
 Value LINK (UP|DOWN)
 Value SPEED (\S+)
 Value DUPLEX (\S+)
-Value Type (A|T|H)
-Value PVID (\d+)
+Value Type (A|T|H|--)
+Value PVID (\d+|--)
 
 Start
   ^Type: A - access; T - trunk; H - hybrid -> Bridge

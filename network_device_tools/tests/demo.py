@@ -1,6 +1,7 @@
 from textfsm import TextFSM
 from netmiko import ConnectHandler
 import pandas as pd
+import os
 
 # 将 header 和 data 转换成字典列表
 def convert_to_dict(header, data):
@@ -15,8 +16,91 @@ def convert_to_dict(header, data):
 mac_address = """
 <ASW1-D1-900C-TMH-UBRMB>display  mac-address
 MAC Address      VLAN ID    State            Port/Nickname            Aging
+000f-e207-f2e0   1          Learned          BAGG1                    Y
+0000-0000-0001   104        Learned          BAGG1                    Y
+c81f-ea81-12ff   104        Learned          GE1/0/26                 Y
+0000-0000-0001   3506       Learned          BAGG1                    Y
+0000-0000-0001   3511       Learned          BAGG1                    Y
+000f-e50b-67c4   3511       Learned          GE1/0/28                 Y
+0000-0000-0001   3512       Learned          BAGG1                    Y
+0000-0000-0001   3517       Learned          BAGG1                    Y
+0000-0000-0001   3519       Learned          BAGG1                    Y
+0000-0000-0001   3521       Learned          BAGG1                    Y
+22fa-974c-b781   4001       Learned          BAGG1                    Y
+6ab8-6164-8127   4001       Learned          BAGG1                    Y
+6ce5-f7d9-2601   4001       Learned          BAGG1                    Y
+72e4-9ea0-c115   4001       Learned          BAGG1                    Y
+7a42-0b67-6da5   4001       Learned          BAGG1                    Y
+9e62-00e3-dee4   4001       Learned          BAGG1                    Y
+a6b9-f097-5c33   4001       Learned          BAGG1                    Y
+aa23-76b7-8caf   4001       Learned          BAGG1                    Y
+aa4a-de39-26d6   4001       Learned          BAGG1                    Y
+b2ed-f757-3520   4001       Learned          BAGG1                    Y
+bea3-91b7-a0e2   4001       Learned          BAGG1                    Y
+da81-22cb-f061   4001       Learned          BAGG1                    Y
+e2d5-445c-0768   4001       Learned          BAGG1                    Y
+f28b-1931-bf7c   4001       Learned          BAGG1                    Y
+f639-2dc2-75fe   4001       Learned          BAGG1                    Y
+0c60-766f-7f9b   4011       Learned          GE1/0/19                 Y
+328e-d1f5-446c   4011       Learned          GE1/0/16                 Y
+4c49-e31f-f37f   4011       Learned          GE1/0/20                 Y
+66c3-b785-ffbf   4011       Learned          GE1/0/15                 Y
+6ce5-f7d9-2601   4011       Learned          BAGG1                    Y
+a611-5976-a2ae   4011       Learned          GE1/0/11                 Y
+c215-031a-3a9a   4011       Learned          GE1/0/17                 Y
+dc72-9bcd-61d3   4011       Learned          GE1/0/18                 Y
+1ae0-bb84-fe34   4012       Learned          GE1/0/22                 Y
+6ce5-f7d9-2601   4012       Learned          BAGG1                    Y
+a46b-b63c-e22c   4012       Learned          GE1/0/14                 Y
+0217-5990-7731   4013       Learned          GE1/0/18                 Y
+6ce5-f7d9-2601   4013       Learned          BAGG1                    Y
+387a-0ea6-ccaf   4014       Learned          GE1/0/22                 Y
+6ce5-f7d9-2601   4014       Learned          BAGG1                    Y
+821d-985e-2293   4014       Learned          GE1/0/13                 Y
+a4b1-c1da-20be   4014       Learned          GE1/0/15                 Y
+caeb-c3c0-ad5a   4014       Learned          GE1/0/17                 Y
+f260-d66f-d966   4014       Learned          GE1/0/16                 Y
+0aa1-70aa-a8b8   4015       Learned          GE1/0/11                 Y
+1656-ac9f-ee32   4015       Learned          GE1/0/12                 Y
 3e51-88b9-801f   4015       Learned          GE1/0/11                 Y
 64d6-9ad0-1c6d   4015       Learned          GE1/0/3                  Y
+6ce5-f7d9-2601   4015       Learned          BAGG1                    Y
+7c6b-9c83-643d   4015       Learned          GE1/0/19                 Y
+923b-a4bb-8bc3   4015       Learned          GE1/0/21                 Y
+b24d-e170-44bf   4015       Learned          GE1/0/16                 Y
+56d3-14b1-a1a6   4016       Learned          GE1/0/21                 Y
+6ce5-f7d9-2601   4016       Learned          BAGG1                    Y
+88d8-2e9e-5679   4016       Learned          GE1/0/19                 Y
+0e3b-9e40-9ec5   4017       Learned          GE1/0/4                  Y
+6ce5-f7d9-2601   4017       Learned          BAGG1                    Y
+ac12-03fb-f455   4017       Learned          GE1/0/4                  Y
+4613-b85e-c3eb   4018       Learned          GE1/0/12                 Y
+6ce5-f7d9-2601   4018       Learned          BAGG1                    Y
+c608-6a70-f3ff   4018       Learned          GE1/0/10                 Y
+2a28-a01e-d5f6   4019       Learned          GE1/0/20                 Y
+50de-061e-8fe8   4019       Learned          GE1/0/11                 Y
+6ce5-f7d9-2601   4019       Learned          BAGG1                    Y
+a051-0b90-4769   4019       Learned          GE1/0/3                  Y
+ac92-3261-4119   4019       Learned          GE1/0/13                 Y
+0000-0000-0001   4093       Learned          BAGG1                    Y
+74d6-cb24-64e0   4093       Learned          GE1/0/16                 Y
+74d6-cb24-65c0   4093       Learned          GE1/0/5                  Y
+74d6-cb24-65e0   4093       Learned          GE1/0/8                  Y
+74d6-cb24-6640   4093       Learned          GE1/0/15                 Y
+74d6-cb24-6660   4093       Learned          GE1/0/18                 Y
+74d6-cb24-6680   4093       Learned          GE1/0/19                 Y
+74d6-cb24-66a0   4093       Learned          GE1/0/11                 Y
+74d6-cb24-66c0   4093       Learned          GE1/0/7                  Y
+74d6-cb24-6700   4093       Learned          GE1/0/3                  Y
+74d6-cb24-6720   4093       Learned          GE1/0/17                 Y
+74d6-cb2b-6280   4093       Learned          GE1/0/20                 Y
+74d6-cb2b-6380   4093       Learned          GE1/0/1                  Y
+74d6-cb2b-63a0   4093       Learned          GE1/0/2                  Y
+74d6-cb2b-64c0   4093       Learned          GE1/0/22                 Y
+74d6-cb2b-6620   4093       Learned          GE1/0/10                 Y
+74d6-cb2b-6640   4093       Learned          GE1/0/12                 Y
+74d6-cb2b-6760   4093       Learned          GE1/0/9                  Y
+74d6-cb2b-6780   4093       Learned          GE1/0/4                  Y
 74d6-cb2b-67c0   4093       Learned          GE1/0/13                 Y
 74d6-cb2b-6840   4093       Learned          GE1/0/21                 Y
 74d6-cb2b-68e0   4093       Learned          GE1/0/6                  Y
@@ -170,12 +254,15 @@ XGE5/0/51            UP   10G(a)  F(a)   --   --
 XGE5/0/52            UP   10G(a)  F(a)   --   --
 """
 
-# mac_template = open("hp_comware_display_mac-address.textfsm")
-# fsm = TextFSM(mac_template)
-# result = fsm.ParseText(mac_address)
+current_script_dir = os.path.dirname(os.path.abspath(__file__))
 
-# print(fsm.header)
-# print(result[:2])
+mac_template = open(current_script_dir + r"\textfsm_templates\hp_comware_display_mac-address.textfsm")
+fsm = TextFSM(mac_template)
+result = fsm.ParseText(mac_address)
+
+mac_data = convert_to_dict(fsm.header, result)
+
+print(mac_data[:2])
 
 # arp_template = open("hp_comware_display_arp.textfsm")
 # fsm = TextFSM(arp_template)
@@ -183,18 +270,58 @@ XGE5/0/52            UP   10G(a)  F(a)   --   --
 
 # print(fsm.header)
 # print(result[:2])
+# 获取当前脚本文件的绝对路径
+# pd.set_option('display.max_rows', None)
+# pd.set_option('display.max_columns', None)
+# pd.set_option('display.width', None)
+# pd.set_option('display.max_colwidth', None)
 
-int_template = open("hp_comware_display_interface_brief.textfsm")
+int_template = open(current_script_dir + r"\textfsm_templates\hp_comware_display_interface_brief.textfsm")
 fsm = TextFSM(int_template)
 result = fsm.ParseText(inter)
 
-formatted_data = convert_to_dict(fsm.header, result)
+finterface_data = convert_to_dict(fsm.header, result)
 
-print(formatted_data[:2])
+print(finterface_data[:2])
+
+# 将数据转换为DataFrame
+df1 = pd.DataFrame(mac_data)
+df2 = pd.DataFrame(finterface_data)
+
+# 合并数据，以INTERFACE为键，以df2为准
+# merged_df = pd.merge(df1, df2, on='INTERFACE', how='left')
+
+# 合并数据，以INTERFACE为键，保留所有接口
+merged_df = pd.merge(df1, df2, on='INTERFACE', how='outer')
+
+# 将 MAC_ADDRESS 列转换为列表
+merged_df['MAC_ADDRESS'] = merged_df['MAC_ADDRESS'].apply(lambda x: [x])
+
+# 按 INTERFACE 分组，并将 MAC_ADDRESS 列合并为列表
+grouped_df = merged_df.groupby('INTERFACE').agg({
+    'MAC_ADDRESS': 'sum',
+    'VLAN_ID': 'first',
+    'STATE': 'first',
+    'AGING': 'first',
+    'LINK': 'first',
+    'SPEED': 'first',
+    'DUPLEX': 'first',
+    'Type': 'first',
+    'PVID': 'first'
+}).reset_index()
+
+# # 打印分组后的数据
+# print(grouped_df)
+
+# 保存为 Excel 文件
+output_file = 'output_table.xlsx'
+grouped_df.to_excel(output_file, index=True)
+
+print(f"表格已保存为 {output_file}")
 
 
 # 将字典列表转换为DataFrame
-df = pd.DataFrame(formatted_data)
+# df = pd.DataFrame(formatted_data)
 
 # 将DataFrame写入Excel文件
-df.to_excel('output.xlsx', index=False)
+# df.to_excel('output.xlsx', index=False)
